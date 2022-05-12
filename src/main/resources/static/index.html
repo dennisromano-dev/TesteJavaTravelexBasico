@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="ISO-8859-1">
+		<title>Cálculo IMC</title>
+		<link rel="stylesheet" href="../css/index.css">
+	</head>
+	<body>
+		<form id="imcForm" action="/peso/imc">
+			<ul class="form-style-1">
+				<li>
+					<label>Peso <span class="required">*</span></label>
+					<input id="peso" type="text" name="peso" maxlength="5" class="field-divided decimal2" />
+				</li>
+				<li>
+					<label>Altura <span class="required">*</span></label>
+					<input id="altura" type="text" name="altura" maxlength="4" class="field-divided decimal" />
+				</li>
+				<li>
+					<input type="submit" value="Submit" />
+				</li>
+			</ul>
+		</form>
+		<div id="resultado">
+		</div>
+	</body>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+		crossorigin="anonymous">
+	</script>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
+
+	<script type="text/javascript">
+		$('.decimal').mask("#,#0", {
+			reverse : false
+		});
+	
+		$('.decimal2').mask("##,#0", {
+			reverse : false
+		});
+	
+		$("#imcForm").submit(function(e) {
+	
+			e.preventDefault();
+			
+			if( $('#peso').val() === ''){
+				alert('Informar peso');
+				return;
+			}
+
+			if( $('#altura').val() === ''){
+				alert('Informar altura');
+				return;
+			}
+	
+			var form = $(this);
+			var url = form.attr('action');
+	
+			$.ajax({
+				type : "GET",
+				url : url,
+				data : form.serialize(),
+				success : function(data) {
+					$('#resultado').html(
+							'<div class="resultado"><h2>Resultado</h2> ' +
+							'<p>Imc:'+data.massaCorporal+'</p>' +
+							'<p>Recomendação:'+ data.pesoIdeal+'</p>' +
+							'<p>Estado: '+ data.status+'</p> </div>');
+				}
+			});
+		});
+	</script>
+</html>
